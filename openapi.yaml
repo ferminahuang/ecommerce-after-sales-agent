@@ -1,0 +1,87 @@
+openapi: 3.0.1
+info:
+  title: 电商售后 Agent Demo Mock API
+  description: 个人作品集 Demo 的模拟售后后端，全部为虚构数据，与任何电商平台无关。
+  version: 1.0.0
+servers:
+  - url: https://YOUR-PUBLIC-URL.trycloudflare.com   # 替换成 cloudflared / ngrok 给你的公网地址
+paths:
+  /orders/{order_id}:
+    get:
+      operationId: get_order
+      summary: 查询订单
+      description: 根据订单号查询商品、金额、类目、签收时间、距签收天数、买家近30天售后次数。
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: 订单号，如 PD1001
+          schema: {type: string}
+      responses:
+        '200': {description: 订单信息}
+        '404': {description: 订单不存在}
+  /logistics/{order_id}:
+    get:
+      operationId: get_logistics
+      summary: 查询物流轨迹
+      description: 返回物流事件、停滞天数，以及是否超过停滞阈值。
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: 订单号
+          schema: {type: string}
+      responses:
+        '200': {description: 物流信息}
+  /policy:
+    get:
+      operationId: get_policy
+      summary: 查询售后政策
+      description: 返回售后期、各售后类型适用条件、转人工阈值、允许的补偿范围。
+      parameters:
+        - name: category
+          in: query
+          required: false
+          description: 商品类目，如 数码/服饰/生鲜/家电/日用
+          schema: {type: string}
+      responses:
+        '200': {description: 政策}
+  /tickets:
+    post:
+      operationId: create_after_sale_ticket
+      summary: 创建售后工单
+      description: 按政策确定方案后创建工单；转人工时 resolution 填 转人工 且 handoff=true。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, resolution, reason, summary]
+              properties:
+                order_id: {type: string, description: 订单号}
+                resolution: {type: string, enum: [仅退款, 退货退款, 换货, 补发, 转人工], description: 售后方案}
+                reason: {type: string, description: 售后原因}
+                evidence: {type: string, description: 用户提供的照片/问题描述}
+                summary: {type: string, description: 给商家或人工客服的对话摘要}
+                handoff: {type: boolean, description: 是否转人工}
+                handoff_reason: {type: string, description: 转人工原因}
+      responses:
+        '200': {description: 工单}
+  /merchant/notify:
+    post:
+      operationId: notify_merchant
+      summary: 通知商家
+      description: 把工单推送给商家，并附带处理建议。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ticket_id, suggestion]
+              properties:
+                ticket_id: {type: string, description: 工单号}
+                suggestion: {type: string, description: 给商家的处理建议}
+      responses:
+        '200': {description: 通知结果}

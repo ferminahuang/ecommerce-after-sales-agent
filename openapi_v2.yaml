@@ -1,0 +1,105 @@
+openapi: 3.0.1
+info:
+  title: 电商售后 Agent Demo Mock API
+  description: 个人作品集 Demo 的模拟售后后端，全部为虚构数据，与任何电商平台无关。
+  version: 2.0.0
+servers:
+  - url: https://YOUR-PUBLIC-URL.trycloudflare.com   # 替换成 cloudflared / ngrok 给你的公网地址
+paths:
+  /orders/{order_id}:
+    get:
+      operationId: get_order
+      summary: 查询订单
+      description: 根据订单号查询商品、金额、类目、签收时间、距签收天数、买家近30天售后次数。
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: 订单号，如 PD1001
+          schema: {type: string}
+      responses:
+        '200': {description: 订单信息}
+        '404': {description: 订单不存在}
+  /logistics/{order_id}:
+    get:
+      operationId: get_logistics
+      summary: 查询物流轨迹
+      description: 返回物流事件、停滞天数，以及是否超过停滞阈值。
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: 订单号
+          schema: {type: string}
+      responses:
+        '200': {description: 物流信息}
+  /logistics/{order_id}/urge:
+    post:
+      operationId: urge_logistics
+      summary: 催件
+      description: 未签收订单催件（待发货催商家，运输中催物流）；物流停滞超过 3 天自动发放 3 元无门槛券 1 张（每单限 1 张）。返回 coupon 和 sla。已签收订单返回 422。
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: 订单号
+          schema: {type: string}
+      responses:
+        '200': {description: 催件结果}
+        '422': {description: 已签收无需催件}
+  /policy:
+    get:
+      operationId: get_policy
+      summary: 查询售后政策
+      description: 返回售后期、各售后类型适用条件、转人工阈值、允许的补偿范围，以及 sla（各环节时效，回复时效只能引用这里）。
+      parameters:
+        - name: category
+          in: query
+          required: false
+          description: 商品类目，如 数码/服饰/生鲜/家电/日用
+          schema: {type: string}
+      responses:
+        '200': {description: 政策}
+  /tickets:
+    post:
+      operationId: create_after_sale_ticket
+      summary: 创建售后工单
+      description: 按政策确定方案后创建工单；转人工时 resolution 填 转人工 且 handoff=true。后端会按政策硬校验，不合规返回 422（需改方案或转人工）。非转人工工单建单时自动通知商家（无需再调用 notify_merchant），返回 merchant_notification 和 sla。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, resolution, reason, summary]
+              properties:
+                order_id: {type: string, description: 订单号}
+                resolution: {type: string, enum: [仅退款, 退货退款, 换货, 补发, 转人工], description: 售后方案}
+                reason: {type: string, description: 售后原因}
+                evidence: {type: string, description: 用户提供的照片/问题描述}
+                summary: {type: string, description: 给商家或人工客服的对话摘要}
+                handoff: {type: boolean, description: 是否转人工}
+                handoff_reason: {type: string, description: 转人工原因}
+                merchant_suggestion: {type: string, description: 非转人工工单自动推送给商家的处理建议}
+      responses:
+        '200': {description: 工单（含 merchant_notification、sla）}
+        '422': {description: 方案不符合政策}
+  /merchant/notify:
+    post:
+      operationId: notify_merchant
+      summary: 补充通知商家
+      description: 仅用于给已建的非转人工工单补充说明（建单时已自动通知）。ticket_id 必须来自 create_after_sale_ticket 返回值；转人工工单调用会返回 422。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ticket_id, suggestion]
+              properties:
+                ticket_id: {type: string, description: 工单号}
+                suggestion: {type: string, description: 给商家的处理建议}
+      responses:
+        '200': {description: 通知结果}
+        '404': {description: 工单不存在}
+        '422': {description: 转人工工单不推送商家}

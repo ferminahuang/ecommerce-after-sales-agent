@@ -1,0 +1,238 @@
+{
+  "_note": "全部为虚构模拟数据。日期字段为相对今天的天数偏移（负数=几天前），服务启动时换算成真实日期。",
+  "users": {
+    "U001": {
+      "name": "王**",
+      "after_sale_count_30d": 0,
+      "vip": false
+    },
+    "U002": {
+      "name": "李**",
+      "after_sale_count_30d": 1,
+      "vip": true
+    },
+    "U003": {
+      "name": "赵**",
+      "after_sale_count_30d": 4,
+      "vip": false
+    }
+  },
+  "orders": [
+    {
+      "order_id": "PD1001",
+      "user_id": "U001",
+      "merchant_id": "M01",
+      "merchant_name": "声悦数码旗舰店",
+      "item": "蓝牙耳机 X3（白色）",
+      "category": "数码",
+      "amount": 129.0,
+      "paid_offset": -6,
+      "status": "已签收",
+      "signed_offset": -3,
+      "tracking_no": "YT8801"
+    },
+    {
+      "order_id": "PD1002",
+      "user_id": "U001",
+      "merchant_id": "M02",
+      "merchant_name": "家清日用专营店",
+      "item": "抽纸 24 包装",
+      "category": "日用",
+      "amount": 29.9,
+      "paid_offset": -5,
+      "status": "已签收",
+      "signed_offset": -2,
+      "tracking_no": "ZT8802",
+      "note": "包裹称重少于标准重量（疑似漏发）"
+    },
+    {
+      "order_id": "PD1003",
+      "user_id": "U002",
+      "merchant_id": "M03",
+      "merchant_name": "简衣服饰店",
+      "item": "纯棉 T 恤 L 码",
+      "category": "服饰",
+      "amount": 59.0,
+      "paid_offset": -8,
+      "status": "已签收",
+      "signed_offset": -5,
+      "tracking_no": "YD8803"
+    },
+    {
+      "order_id": "PD1004",
+      "user_id": "U002",
+      "merchant_id": "M01",
+      "merchant_name": "声悦数码旗舰店",
+      "item": "智能手机 Pro 256G",
+      "category": "数码",
+      "amount": 3299.0,
+      "paid_offset": -7,
+      "status": "已签收",
+      "signed_offset": -4,
+      "tracking_no": "SF8804"
+    },
+    {
+      "order_id": "PD1005",
+      "user_id": "U001",
+      "merchant_id": "M04",
+      "merchant_name": "果园直发店",
+      "item": "云南沃柑 5 斤",
+      "category": "生鲜",
+      "amount": 39.9,
+      "paid_offset": -3,
+      "status": "已签收",
+      "signed_offset": -1,
+      "tracking_no": "JD8805"
+    },
+    {
+      "order_id": "PD1006",
+      "user_id": "U002",
+      "merchant_id": "M05",
+      "merchant_name": "厨电优选店",
+      "item": "电饭煲 3L",
+      "category": "家电",
+      "amount": 199.0,
+      "paid_offset": -30,
+      "status": "已签收",
+      "signed_offset": -25,
+      "tracking_no": "YT8806"
+    },
+    {
+      "order_id": "PD1007",
+      "user_id": "U001",
+      "merchant_id": "M01",
+      "merchant_name": "声悦数码旗舰店",
+      "item": "充电宝 20000mAh",
+      "category": "数码",
+      "amount": 89.0,
+      "paid_offset": -1,
+      "status": "待发货",
+      "signed_offset": null,
+      "tracking_no": null
+    },
+    {
+      "order_id": "PD1008",
+      "user_id": "U003",
+      "merchant_id": "M06",
+      "merchant_name": "跑者运动店",
+      "item": "跑步鞋 42 码",
+      "category": "服饰",
+      "amount": 239.0,
+      "paid_offset": -6,
+      "status": "运输中",
+      "signed_offset": null,
+      "tracking_no": "ST8808"
+    }
+  ],
+  "logistics": {
+    "YT8801": [
+      {
+        "offset": -5,
+        "event": "已揽收"
+      },
+      {
+        "offset": -3,
+        "event": "已签收，本人签收"
+      }
+    ],
+    "ZT8802": [
+      {
+        "offset": -4,
+        "event": "已揽收"
+      },
+      {
+        "offset": -2,
+        "event": "已签收，快递柜"
+      }
+    ],
+    "YD8803": [
+      {
+        "offset": -7,
+        "event": "已揽收"
+      },
+      {
+        "offset": -5,
+        "event": "已签收"
+      }
+    ],
+    "SF8804": [
+      {
+        "offset": -6,
+        "event": "已揽收"
+      },
+      {
+        "offset": -4,
+        "event": "已签收，本人签收"
+      }
+    ],
+    "JD8805": [
+      {
+        "offset": -2,
+        "event": "已揽收（冷链）"
+      },
+      {
+        "offset": -1,
+        "event": "已签收"
+      }
+    ],
+    "YT8806": [
+      {
+        "offset": -28,
+        "event": "已揽收"
+      },
+      {
+        "offset": -25,
+        "event": "已签收"
+      }
+    ],
+    "ST8808": [
+      {
+        "offset": -5,
+        "event": "已揽收"
+      },
+      {
+        "offset": -4,
+        "event": "到达中转站（郑州），之后无更新"
+      }
+    ]
+  },
+  "policy": {
+    "no_reason_return_days": 7,
+    "quality_issue_days": 15,
+    "fresh_report_hours": 48,
+    "refund_only_quality_max_amount": 50,
+    "high_amount_handoff": 1000,
+    "fraud_after_sale_count_30d": 3,
+    "logistics_stall_days": 3,
+    "allowed_compensation": "物流停滞超过 3 天可发放 3 元无门槛券 1 张（通过 urge_logistics 自动发放，每单限 1 张）；除此之外不承诺任何额外赔偿",
+    "rules": [
+      {
+        "type": "仅退款",
+        "when": "未发货订单；或生鲜签收 48 小时内坏损；或质量问题且金额 ≤ 50 元",
+        "need_return": false
+      },
+      {
+        "type": "退货退款",
+        "when": "签收 7 天内无理由（生鲜除外）；或签收 15 天内质量问题",
+        "need_return": true
+      },
+      {
+        "type": "换货",
+        "when": "签收 15 天内质量问题或尺码不合（7 天内），且有同款库存",
+        "need_return": true
+      },
+      {
+        "type": "补发",
+        "when": "签收后反馈漏发/少件，且包裹称重或商家记录可佐证",
+        "need_return": false
+      }
+    ],
+    "sla": {
+      "商家处理工单": "商家在 48 小时内处理售后工单",
+      "退款到账": "商家同意退款后，原路退回，一般 1–3 个工作日到账",
+      "换货/补发发出": "商家同意后 72 小时内发出",
+      "人工客服跟进": "人工专员在 24 小时内联系",
+      "催件反馈": "物流方 24 小时内反馈催件结果"
+    }
+  }
+}

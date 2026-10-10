@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+venv/
+.env
+logs/
+*.log
+openapi_live*.yaml
